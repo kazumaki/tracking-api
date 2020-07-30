@@ -1,58 +1,41 @@
 require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
-=begin   let!(:users) { create_list(:user, 10) }
-  let(:user_id) { users.first.id }
+  let(:user) { build(:user) }
+  let(:headers) { valid_headers.except('Authorization') }
+  let(:valid_attributes) do
+    attributes_for(:user, password_confirmation: user.password)
+  end
 
-  describe 'GET /users/:id' do
-    before { get "/users/#{user_id}" }
+  # User signup test suite
+  describe 'POST /signup' do
+    context 'when valid request' do
+      before { post '/signup', params: valid_attributes.to_json, headers: headers }
 
-    context 'when the record exists' do
-      it 'returns the user' do
-        expect(json).not_to be_empty
-        expect(json['id']).to eq(user_id)
+      it 'creates a new user' do
+        expect(response).to have_http_status(201)
       end
 
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
+      it 'returns success message' do
+        expect(json['message']).to match(/Account created successfully/)
+      end
+
+      it 'returns an authentication token' do
+        expect(json['auth_token']).not_to be_nil
       end
     end
 
-    context 'when the record does not exist' do
-      let(:user_id) { 100 }
+    context 'when invalid request' do
+      before { post '/signup', params: {}, headers: headers }
 
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
+      it 'does not create a new user' do
+        expect(response).to have_http_status(422)
       end
 
-      it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find User/)
+      it 'returns failure message' do
+        expect(json['message'])
+          .to match(/Validation failed: Password can't be blank, Name can't be blank, Email can't be blank, Password digest can't be blank/)
       end
     end
   end
-
-  describe 'POST /users' do
-    let(:valid_attributes) { { name: 'John Doe'} }
-
-    context 'when the request is valid' do
-      before { post '/users', params: valid_attributes }
-
-      it 'creates a user' do
-        expect(json['name']).to eq('John Doe')
-      end
-
-      it 'returns status code 201' do
-        expect(response).to have_http_status(201)
-      end
-    end
-
-    context 'when the request is invalid' do
-      before { post '/users', params: {} } 
-
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
-    end
-  end 
-=end
 end

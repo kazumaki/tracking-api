@@ -1,11 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe "Measurements", type: :request do
-  let!(:measurements) { create_list(:measurement, 10) }
+  let(:user) { create(:user) }
+  let!(:measurements) { create_list(:measurement, 10, user: user) }
   let(:measurement_id) { measurements.first.id }
 
+  let(:headers) { valid_headers }
+
   describe 'GET /measurements' do
-    before { get "/measurements" }
+    before { get "/measurements", params: {}, headers: headers }
 
     context 'When is a valid request' do
       it 'returns the measurements list' do
@@ -20,7 +23,7 @@ RSpec.describe "Measurements", type: :request do
   end
 
   describe 'GET /measurements/:id' do
-    before { get "/measurements/#{measurement_id}" }
+    before { get "/measurements/#{measurement_id}", params: {}, headers: headers }
 
     context 'when the record exists' do
       it 'returns the measurement' do
@@ -48,10 +51,11 @@ RSpec.describe "Measurements", type: :request do
 
   describe 'POST /measurements' do
     let!(:measurement_type) { create(:measurement_type) }
-    let(:valid_attributes) { { measurement_type_id: measurement_type.id, value: 2.5 } }
+    let!(:user) { create(:user) }
+    let(:valid_attributes) { {measurement_type_id: measurement_type.id, value: 2.5 }.to_json }
 
     context 'when the request is valid' do
-      before { post '/measurements', params: valid_attributes }
+      before { post '/measurements', params: valid_attributes, headers: headers }
 
       it 'creates a measurement' do
         expect(json['value']).to eq("2.5")
@@ -63,7 +67,7 @@ RSpec.describe "Measurements", type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/measurements', params: { value: 2.5 } }
+      before { post '/measurements', params: { value: 2.5 }.to_json, headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -77,10 +81,10 @@ RSpec.describe "Measurements", type: :request do
   end
 
   describe 'PUT /measurements/:id' do
-    let(:valid_attributes) { { value: 3.5 } }
+    let(:valid_attributes) { { value: 3.5 }.to_json }
 
     context 'when the record exists' do
-      before { put "/measurements/#{measurement_id}", params: valid_attributes }
+      before { put "/measurements/#{measurement_id}", params: valid_attributes, headers: headers }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -93,7 +97,7 @@ RSpec.describe "Measurements", type: :request do
   end
 
   describe 'DELETE /measurements/:id' do
-    before { delete "/measurements/#{measurement_id}" }
+    before { delete "/measurements/#{measurement_id}", headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
