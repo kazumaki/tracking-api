@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_29_222706) do
+ActiveRecord::Schema.define(version: 2020_07_30_173103) do
 
   create_table "measurement_types", force: :cascade do |t|
     t.string "name"
@@ -24,7 +24,9 @@ ActiveRecord::Schema.define(version: 2020_07_29_222706) do
     t.decimal "value", precision: 6, scale: 2
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id", null: false
     t.index ["measurement_type_id"], name: "index_measurements_on_measurement_type_id"
+    t.index ["user_id"], name: "index_measurements_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -37,4 +39,5 @@ ActiveRecord::Schema.define(version: 2020_07_29_222706) do
   end
 
   add_foreign_key "measurements", "measurement_types"
+  add_foreign_key "measurements", "users"
 end
