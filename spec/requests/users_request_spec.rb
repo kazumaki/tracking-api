@@ -31,14 +31,26 @@ RSpec.describe "Users", type: :request do
     end
   end
 
-  describe 'POST /todos' do
+  describe 'POST /users' do
     let(:valid_attributes) { { name: 'John Doe'} }
 
     context 'when the request is valid' do
       before { post '/users', params: valid_attributes }
 
       it 'creates a user' do
+        expect(json['name']).to eq('John Doe')
+      end
 
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+    end
+
+    context 'when the request is invalid' do
+      before { post '/users', params: {} } 
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
       end
     end
   end

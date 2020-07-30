@@ -10,11 +10,7 @@ class UsersController < ApplicationController
   def show
     json_response(@user)
   end
-
-  def destroy
-
-  end
-
+  
   private
 
   def user_params
