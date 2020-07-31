@@ -56,3 +56,5 @@ gem 'rubocop', '~>0.81.0'
 gem 'bcrypt'
 
 gem 'jwt'
+
+gem 'rack-cors'
