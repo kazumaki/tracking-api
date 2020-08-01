@@ -7,7 +7,8 @@ class MeasurementsController < ApplicationController
   end
 
   def create
-    @measurement = current_user.measurements.create!(measurement_params)
+    measurement_type = MeasurementType.find(measurement_params[:measurementType])
+    @measurement = current_user.measurements.create!(value: measurement_params[:value], measurement_type: measurement_type)
     json_response(@measurement, :created)
   end
 
@@ -28,7 +29,7 @@ class MeasurementsController < ApplicationController
   private
 
   def measurement_params
-    params.permit(:value, :measurement_type_id)
+    params.permit(:value, :measurementType, :measurement)
   end
 
   def set_measurement
