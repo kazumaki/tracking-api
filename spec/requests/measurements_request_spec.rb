@@ -52,7 +52,7 @@ RSpec.describe "Measurements", type: :request do
   describe 'POST /measurements' do
     let!(:measurement_type) { create(:measurement_type) }
     let!(:user) { create(:user) }
-    let(:valid_attributes) { {measurement_type_id: measurement_type.id, value: 2.5 }.to_json }
+    let(:valid_attributes) { {measurementType: measurement_type.id, value: 2.5 }.to_json }
 
     context 'when the request is valid' do
       before { post '/measurements', params: valid_attributes, headers: headers }
@@ -69,13 +69,13 @@ RSpec.describe "Measurements", type: :request do
     context 'when the request is invalid' do
       before { post '/measurements', params: { value: 2.5 }.to_json, headers: headers }
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
       end
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match(/Validation failed: Measurement type must exist, Measurement type can't be blank/)
+          .to match(/Couldn't find MeasurementType without an ID/)
       end
     end
   end
