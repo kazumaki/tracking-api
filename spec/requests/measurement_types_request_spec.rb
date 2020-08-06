@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "MeasurementTypes", type: :request do
-  let!(:measurement_types) {create_list(:measurement_type, 10)}
-  let(:user) {create(:user)}
+RSpec.describe 'MeasurementTypes', type: :request do
+  let!(:measurement_types) { create_list(:measurement_type, 10) }
+  let(:user) { create(:user) }
   let(:headers) { valid_headers }
 
   describe 'GET /measurement_types' do

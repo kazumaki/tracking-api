@@ -1,5 +1,5 @@
 class MeasurementsController < ApplicationController
-  before_action :set_measurement, only: [:update, :destroy, :show]
+  before_action :set_measurement, only: %i[update destroy show]
 
   def index
     @measurements = current_user.measurements
@@ -8,7 +8,8 @@ class MeasurementsController < ApplicationController
 
   def create
     measurement_type = MeasurementType.find(measurement_params[:measurementType])
-    @measurement = current_user.measurements.create!(value: measurement_params[:value], measurement_type: measurement_type)
+    @measurement =
+      current_user.measurements.create!(value: measurement_params[:value], measurement_type: measurement_type)
     json_response(@measurement, :created)
   end
 

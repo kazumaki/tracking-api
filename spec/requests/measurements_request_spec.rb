@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Measurements", type: :request do
+RSpec.describe 'Measurements', type: :request do
   let(:user) { create(:user) }
   let!(:measurements) { create_list(:measurement, 10, user: user) }
   let(:measurement_id) { measurements.first.id }
@@ -8,7 +8,7 @@ RSpec.describe "Measurements", type: :request do
   let(:headers) { valid_headers }
 
   describe 'GET /measurements' do
-    before { get "/measurements", params: {}, headers: headers }
+    before { get '/measurements', params: {}, headers: headers }
 
     context 'When is a valid request' do
       it 'returns the measurements list' do
@@ -52,13 +52,13 @@ RSpec.describe "Measurements", type: :request do
   describe 'POST /measurements' do
     let!(:measurement_type) { create(:measurement_type) }
     let!(:user) { create(:user) }
-    let(:valid_attributes) { {measurementType: measurement_type.id, value: 2.5 }.to_json }
+    let(:valid_attributes) { { measurementType: measurement_type.id, value: 2.5 }.to_json }
 
     context 'when the request is valid' do
       before { post '/measurements', params: valid_attributes, headers: headers }
 
       it 'creates a measurement' do
-        expect(json['value']).to eq("2.5")
+        expect(json['value']).to eq('2.5')
       end
 
       it 'returns status code 201' do
